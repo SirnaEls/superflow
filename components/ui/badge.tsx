@@ -17,11 +17,11 @@ export const Badge: React.FC<BadgeProps> = ({
   className,
 }) => {
   const variants = {
-    default: 'bg-slate-100 text-slate-600',
-    primary: 'bg-violet-500/20 text-violet-300',
-    success: 'bg-green-100 text-green-700',
-    warning: 'bg-amber-100 text-amber-700',
-    danger: 'bg-red-100 text-red-700',
+    default: 'bg-white/10 text-white/80',
+    primary: 'bg-[#212121] text-white',
+    success: 'bg-green-500/20 text-green-400',
+    warning: 'bg-amber-500/20 text-amber-400',
+    danger: 'bg-red-500/20 text-red-400',
   };
 
   return (

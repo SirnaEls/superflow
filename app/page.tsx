@@ -1,19 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React from 'react';
 import { InputMode, UploadedImage } from '@/types';
-import { SAMPLE_INPUT } from '@/lib/constants';
 import { useFlowGenerator } from '@/hooks';
 import { Header } from '@/components/layout';
-import { InputPanel, FeatureList, FlowViewer } from '@/components/features';
+import { FloatingFeatures, FlowViewer, ChatBar } from '@/components/features';
+import { FloatingLegend } from '@/components/flow';
 
 // ============================================
 // Main Page Component
 // ============================================
 
 export default function FlowForgePage() {
-  const [inputMode, setInputMode] = useState<InputMode>('text');
-  const [textInput, setTextInput] = useState('');
 
   const {
     features,
@@ -28,57 +26,46 @@ export default function FlowForgePage() {
     activeFeature,
   } = useFlowGenerator();
 
-  const handleLoadSample = () => {
-    setInputMode('text');
-    setTextInput(SAMPLE_INPUT);
-  };
-
-  const handleGenerate = (images: UploadedImage[]) => {
-    generateFlows(textInput, images, inputMode);
+  const handleGenerate = async (text: string, images: UploadedImage[], mode: InputMode) => {
+    await generateFlows(text, images, mode);
   };
 
   return (
-    <div className="min-h-screen bg-[#0A0A0F] text-white">
-        {/* Background gradient */}
-        <div className="fixed inset-0 bg-gradient-to-br from-violet-950/20 via-transparent to-indigo-950/20 pointer-events-none" />
+    <div className="min-h-screen bg-[#0A0A0F] text-white flex flex-col">
+      {/* Background gradient */}
+      <div className="fixed inset-0 bg-gradient-to-br from-violet-950/20 via-transparent to-indigo-950/20 pointer-events-none" />
 
-        {/* Header */}
-        <Header onLoadSample={handleLoadSample} />
+      {/* Header */}
+      <Header />
 
-        {/* Main Content */}
-        <div className="relative max-w-7xl mx-auto px-6 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left Panel - Input */}
-          <div className="lg:col-span-4">
-            <InputPanel
-              inputMode={inputMode}
-              onInputModeChange={setInputMode}
-              textInput={textInput}
-              onTextInputChange={setTextInput}
-              onGenerate={handleGenerate}
-              isGenerating={isGenerating}
-              error={error}
-            />
-          </div>
+      {/* Main Content - Whiteboard full screen */}
+      <div className="flex-1 overflow-hidden pb-32 relative">
+        {/* Flow Viewer - Takes full space */}
+        <FlowViewer 
+          activeFeature={activeFeature} 
+          activeFeatureId={activeFeatureId}
+          onUpdateNode={updateNode}
+        />
 
-          {/* Right Panel - Features & Flow Viewer */}
-          <div className="lg:col-span-8 space-y-6">
-            <FeatureList
-              features={features}
-              activeFeatureId={activeFeatureId}
-              onSelectFeature={setActiveFeatureId}
-              onDeleteFeature={deleteFeature}
-              onClearAll={clearFeatures}
-            />
+        {/* Floating Features - Top Right */}
+        <FloatingFeatures
+          features={features}
+          activeFeatureId={activeFeatureId}
+          onSelectFeature={setActiveFeatureId}
+          onDeleteFeature={deleteFeature}
+          onClearAll={clearFeatures}
+        />
 
-            <FlowViewer 
-              activeFeature={activeFeature} 
-              activeFeatureId={activeFeatureId}
-              onUpdateNode={updateNode}
-            />
-          </div>
-        </div>
+        {/* Floating Legend - Bottom Right */}
+        <FloatingLegend />
       </div>
+
+      {/* Chat Bar - Fixed at bottom */}
+      <ChatBar
+        onGenerate={handleGenerate}
+        isGenerating={isGenerating}
+        error={error}
+      />
     </div>
   );
 }

@@ -33,14 +33,14 @@ export const FeatureList: React.FC<FeatureListProps> = ({
     <Card>
       <CardContent>
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
+          <h2 className="text-lg font-semibold flex items-center gap-2 text-white">
             Features Detected
             <Badge variant="primary">{features.length}</Badge>
           </h2>
           <button
             type="button"
             onClick={onClearAll}
-            className="p-1.5 text-slate-500 hover:text-slate-300 transition-colors"
+            className="p-1.5 text-white/40 hover:text-white/60 transition-colors"
             title="Clear all features"
           >
             <RefreshCw className="w-4 h-4" />

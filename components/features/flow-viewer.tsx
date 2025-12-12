@@ -1,10 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { ArrowRight, Download } from 'lucide-react';
 import { Feature } from '@/types';
-import { Card, CardContent, CardTitle, Button } from '@/components/ui';
-import { FlowCanvas, FlowLegend, EmptyState } from '@/components/flow';
+import { FlowCanvas } from '@/components/flow';
 
 // ============================================
 // Flow Viewer Component
@@ -30,46 +28,21 @@ export const FlowViewer: React.FC<FlowViewerProps> = ({
   };
 
   return (
-    <Card className="min-h-[600px]">
-      <CardContent>
-        {/* Header */}
-        <div className="flex items-center justify-between mb-6">
-          <CardTitle icon={<ArrowRight className="w-5 h-5 text-violet-400" />}>
-            {activeFeature ? activeFeature.name : 'User Flow'}
-          </CardTitle>
-          {activeFeature && (
-            <Button
-              variant="ghost"
-              size="sm"
-              leftIcon={<Download className="w-4 h-4" />}
-              onClick={handleExport}
-            >
-              Export
-            </Button>
-          )}
+    <div className="w-full h-full absolute inset-0">
+      {/* Flow Canvas - Whiteboard style (full screen) */}
+      {activeFeature && activeFeatureId ? (
+        <FlowCanvas
+          flow={activeFeature.flow}
+          selectedNodeId={selectedNodeId}
+          onSelectNode={setSelectedNodeId}
+          featureId={activeFeatureId}
+          onUpdateNode={onUpdateNode}
+        />
+      ) : (
+        <div className="w-full h-full flex items-center justify-center">
+          <p className="text-slate-400 text-sm">Sélectionnez une feature pour voir le flow</p>
         </div>
-
-        {/* Legend */}
-        <FlowLegend />
-
-        {/* Flow Canvas */}
-        <div className="mt-6">
-          {activeFeature && activeFeatureId ? (
-            <FlowCanvas
-              flow={activeFeature.flow}
-              selectedNodeId={selectedNodeId}
-              onSelectNode={setSelectedNodeId}
-              featureId={activeFeatureId}
-              onUpdateNode={onUpdateNode}
-            />
-          ) : (
-            <EmptyState
-              title="No flow generated yet"
-              description="Import your FigJam post-its and click 'Generate User Flows' to automatically create visual user flows"
-            />
-          )}
-        </div>
-      </CardContent>
-    </Card>
+      )}
+    </div>
   );
 };

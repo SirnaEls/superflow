@@ -33,8 +33,8 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
       className={cn(
         'group relative p-3 rounded-xl border-2 transition-all duration-200 cursor-pointer h-full',
         isActive
-          ? 'border-violet-500 bg-violet-50 shadow-lg shadow-violet-100'
-          : 'border-slate-200 bg-white hover:border-violet-300 hover:shadow-md'
+          ? 'border-[#212121] bg-[#212121]/20 shadow-lg shadow-black/20'
+          : 'border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/10'
       )}
       onClick={onClick}
     >
@@ -43,7 +43,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
           <h4
             className={cn(
               'font-semibold text-sm truncate flex-1',
-              isActive ? 'text-violet-900' : 'text-slate-800'
+              isActive ? 'text-white' : 'text-white/90'
             )}
           >
             {feature.name}
@@ -51,12 +51,12 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
           <button
             type="button"
             onClick={handleDelete}
-            className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-red-100 text-slate-400 hover:text-red-500 transition-all flex-shrink-0"
+            className="opacity-0 group-hover:opacity-100 p-1 rounded-lg hover:bg-red-500/20 text-white/40 hover:text-red-400 transition-all flex-shrink-0"
           >
             <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
-        <p className="text-xs text-slate-500 line-clamp-2 mb-2 flex-1">
+        <p className="text-xs text-white/60 line-clamp-2 mb-2 flex-1">
           {feature.description}
         </p>
         <div className="flex items-center gap-2 flex-wrap">

@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { signOut } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
@@ -80,18 +81,14 @@ export const Sidebar: React.FC = () => {
       isMounted && isCollapsed ? 'w-16' : 'w-64'
     )}>
       {/* Logo */}
-      <div className="p-6 border-b border-slate-800/50">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-violet-500/25 flex-shrink-0">
-            <Zap className="w-5 h-5 text-white" />
-          </div>
-          {isMounted && !isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <h1 className="text-lg font-bold tracking-tight">FlowForge</h1>
-              <p className="text-xs text-slate-400">Post-its → Flows</p>
-            </div>
-          )}
-        </div>
+      <div className="p-6 border-b border-slate-800/50 flex items-center justify-center">
+        <Image 
+          src="/logo.png" 
+          alt="Logo" 
+          width={120} 
+          height={120} 
+          className="object-contain h-9 w-auto"
+        />
       </div>
 
       {/* Toggle Button */}

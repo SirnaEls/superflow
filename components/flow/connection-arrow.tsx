@@ -16,13 +16,13 @@ export const ConnectionArrow: React.FC<ConnectionArrowProps> = ({
   if (direction === 'down') {
     return (
       <div className="flex flex-col items-center py-2">
-        <div className="w-0.5 h-6 bg-[#8E8E93]" />
+        <div className="w-0.5 h-6 bg-white/20" />
         {label && (
-          <span className="text-xs text-[#6E6E73] px-1 bg-[#F7F5F3] rounded">
+          <span className="text-xs text-white/60 px-2 py-1 bg-[#212121]/50 rounded border border-white/10">
             {label}
           </span>
         )}
-        <div className="w-0.5 h-6 bg-[#8E8E93]" />
+        <div className="w-0.5 h-6 bg-white/20" />
         <svg
           width="12"
           height="12"
@@ -32,7 +32,7 @@ export const ConnectionArrow: React.FC<ConnectionArrowProps> = ({
         >
           <path
             d="M6 0L11.196 9H0.804L6 0Z"
-            fill="#8E8E93"
+            fill="rgba(255, 255, 255, 0.3)"
             transform="rotate(90 6 6)"
           />
         </svg>
@@ -43,7 +43,7 @@ export const ConnectionArrow: React.FC<ConnectionArrowProps> = ({
   return (
     <div className="flex items-center px-3 relative flex-shrink-0">
       {/* Arrow line */}
-      <div className="w-20 h-px bg-slate-700/60 relative">
+      <div className="w-20 h-px bg-white/20 relative">
         {/* Arrow head */}
         <svg
           width="8"
@@ -54,12 +54,12 @@ export const ConnectionArrow: React.FC<ConnectionArrowProps> = ({
         >
           <path
             d="M0 0L8 4L0 8V0Z"
-            fill="#71717A"
+            fill="rgba(255, 255, 255, 0.3)"
           />
         </svg>
       </div>
       {label && (
-        <span className="text-xs text-slate-400 px-2 py-1 bg-slate-900/50 rounded-md ml-2 whitespace-nowrap border border-slate-800/50">
+        <span className="text-xs text-white/60 px-2 py-1 bg-[#212121]/50 rounded-md ml-2 whitespace-nowrap border border-white/10">
           {label}
         </span>
       )}

@@ -19,7 +19,7 @@ const LEGEND_ITEMS: NodeType[] = [
 
 export const FlowLegend: React.FC = () => {
   return (
-    <div className="flex flex-wrap items-center gap-4 p-3 bg-slate-900/30 rounded-lg border border-slate-800/50">
+    <div className="flex flex-wrap items-center gap-4 p-3 bg-white/5 rounded-lg border border-white/10" style={{ width: 'fit-content' }}>
       {LEGEND_ITEMS.map((key) => {
         const config = NODE_CONFIGS[key];
         const isIcon = config.shape === 'icon';
@@ -53,7 +53,7 @@ export const FlowLegend: React.FC = () => {
                 }}
               />
             )}
-            <span className="text-xs text-slate-400 font-medium">{config.label}</span>
+            <span className="text-xs text-white/60 font-medium">{config.label}</span>
           </div>
         );
       })}
