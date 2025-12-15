@@ -151,7 +151,9 @@ export async function POST(request: NextRequest) {
         
         // Get subscription details if available
         if (session.subscription && typeof session.subscription === 'string') {
-          const subscription = await stripe.subscriptions.retrieve(session.subscription);
+          const subscriptionData = await stripe.subscriptions.retrieve(session.subscription);
+          // Access properties directly with type assertion
+          const subscription = subscriptionData as any;
           const customer = await stripe.customers.retrieve(subscription.customer as string);
           const customerEmail = typeof customer === 'object' && !customer.deleted ? customer.email : session.customer_email;
           
@@ -160,11 +162,11 @@ export async function POST(request: NextRequest) {
               customerEmail,
               subscription.customer as string,
               subscription.id,
-              subscription.items.data[0]?.price.id || null,
+              subscription.items?.data?.[0]?.price?.id || null,
               mapStripeStatus(subscription.status),
-              subscription.current_period_start,
-              subscription.current_period_end,
-              subscription.cancel_at_period_end
+              subscription.current_period_start ?? null,
+              subscription.current_period_end ?? null,
+              subscription.cancel_at_period_end ?? false
             );
           }
         }
@@ -172,7 +174,7 @@ export async function POST(request: NextRequest) {
 
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
-        const subscription = event.data.object as Stripe.Subscription;
+        const subscription: any = event.data.object;
         console.log('Subscription updated:', subscription.id);
         
         const customer = await stripe.customers.retrieve(subscription.customer as string);
@@ -183,17 +185,17 @@ export async function POST(request: NextRequest) {
             customerEmail,
             subscription.customer as string,
             subscription.id,
-            subscription.items.data[0]?.price.id || null,
+            subscription.items?.data?.[0]?.price?.id || null,
             mapStripeStatus(subscription.status),
-            subscription.current_period_start,
-            subscription.current_period_end,
-            subscription.cancel_at_period_end
+            subscription.current_period_start ?? null,
+            subscription.current_period_end ?? null,
+            subscription.cancel_at_period_end ?? false
           );
         }
         break;
 
       case 'customer.subscription.deleted':
-        const deletedSubscription = event.data.object as Stripe.Subscription;
+        const deletedSubscription: any = event.data.object;
         console.log('Subscription cancelled:', deletedSubscription.id);
         
         // Update subscription status to canceled
@@ -205,10 +207,10 @@ export async function POST(request: NextRequest) {
             deletedCustomerEmail,
             deletedSubscription.customer as string,
             deletedSubscription.id,
-            deletedSubscription.items.data[0]?.price.id || null,
+            deletedSubscription.items?.data?.[0]?.price?.id || null,
             'canceled',
-            deletedSubscription.current_period_start,
-            deletedSubscription.current_period_end,
+            deletedSubscription.current_period_start ?? null,
+            deletedSubscription.current_period_end ?? null,
             false
           );
         }
@@ -221,12 +223,14 @@ export async function POST(request: NextRequest) {
         break;
 
       case 'invoice.payment_failed':
-        const failedInvoice = event.data.object as Stripe.Invoice;
+        const failedInvoice: any = event.data.object;
         console.log('Invoice payment failed:', failedInvoice.id);
         
         // Update subscription status if it's a subscription invoice
         if (failedInvoice.subscription && typeof failedInvoice.subscription === 'string') {
-          const failedSubscription = await stripe.subscriptions.retrieve(failedInvoice.subscription);
+          const failedSubscriptionData = await stripe.subscriptions.retrieve(failedInvoice.subscription);
+          // Access properties directly with type assertion
+          const failedSubscription = failedSubscriptionData as any;
           const failedCustomer = await stripe.customers.retrieve(failedSubscription.customer as string);
           const failedCustomerEmail = typeof failedCustomer === 'object' && !failedCustomer.deleted ? failedCustomer.email : null;
           
@@ -235,11 +239,11 @@ export async function POST(request: NextRequest) {
               failedCustomerEmail,
               failedSubscription.customer as string,
               failedSubscription.id,
-              failedSubscription.items.data[0]?.price.id || null,
+              failedSubscription.items?.data?.[0]?.price?.id || null,
               'past_due',
-              failedSubscription.current_period_start,
-              failedSubscription.current_period_end,
-              failedSubscription.cancel_at_period_end
+              failedSubscription.current_period_start ?? null,
+              failedSubscription.current_period_end ?? null,
+              failedSubscription.cancel_at_period_end ?? false
             );
           }
         }

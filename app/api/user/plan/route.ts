@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { supabaseServer } from '@/lib/supabase-server';
 import { PlanType } from '@/lib/plans';
 
+export const dynamic = 'force-dynamic';
+
 /**
  * GET /api/user/plan
  * Get user's current plan from database

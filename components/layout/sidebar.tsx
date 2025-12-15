@@ -179,6 +179,7 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
   const displayUser = user || {
     name: 'Guest',
     email: '',
+    avatar: undefined,
   };
 
   // Get plan from usePlan hook
@@ -211,8 +212,8 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
         title={isCollapsed ? (displayUser.name || 'Guest') : undefined}
       >
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
-          {displayUser.avatar ? (
-            <img src={displayUser.avatar} alt={displayUser.name || 'User'} className="w-full h-full object-cover" />
+          {(displayUser as any).avatar ? (
+            <img src={(displayUser as any).avatar} alt={displayUser.name || 'User'} className="w-full h-full object-cover" />
           ) : (
             <User className="w-4 h-4 text-[#F0EEE9]" />
           )}

@@ -5,7 +5,8 @@ import { Feature, UploadedImage, InputMode } from '@/types';
 import { generateFlowsFromAPI } from '@/lib/utils';
 import { saveFlow } from '@/lib/storage';
 import { canGenerate, incrementGenerationCount, getRemainingGenerations } from '@/lib/usage';
-import { getUserPlan } from '@/lib/plans';
+import { usePlan } from '@/hooks/use-plan';
+import { useAuth } from '@/hooks/useAuth';
 
 interface UseFlowGeneratorReturn {
   features: Feature[];
@@ -29,6 +30,7 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
   const [activeFeatureId, setActiveFeatureId] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { plan } = usePlan();
 
   const generateFlows = useCallback(
     async (textInput: string, images: UploadedImage[], inputMode: InputMode) => {
@@ -37,7 +39,6 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
 
       try {
         // Check if user can generate more flows
-        const plan = getUserPlan();
         const canGenerateResult = canGenerate(plan);
         
         if (!canGenerateResult.allowed) {
@@ -74,7 +75,7 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
         setIsGenerating(false);
       }
     },
-    []
+    [plan]
   );
 
   const deleteFeature = useCallback(

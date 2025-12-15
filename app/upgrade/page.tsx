@@ -166,7 +166,7 @@ export default function UpgradePage() {
                     {plan.cta}
                   </CheckoutButton>
                 ) : (
-                  <Button className="w-full" variant="outline">
+                  <Button className="w-full" variant="secondary">
                     {plan.cta}
                   </Button>
                 )}

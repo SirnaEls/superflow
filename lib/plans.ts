@@ -87,7 +87,7 @@ export function setUserPlan(plan: PlanType): void {
  * Get plan limits for current user
  */
 export function getPlanLimits(plan?: PlanType): PlanLimits {
-  const userPlan = plan || getUserPlan();
+  const userPlan = plan || 'free';
   return PLAN_LIMITS[userPlan];
 }
 

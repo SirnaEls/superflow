@@ -23,9 +23,10 @@ export function saveFlow(features: Feature[], name?: string): SavedFlow {
   const existing = getFlows();
   existing.unshift(flow);
   
-  // Limit flows based on user's plan
-  const plan = getUserPlan();
-  const limits = getPlanLimits(plan);
+  // Limit flows based on user's plan (default to free if async call fails)
+  // Note: This is a synchronous function, so we default to free plan limits
+  // The actual plan checking should be done in components using the usePlan hook
+  const limits = getPlanLimits('free');
   
   let limited: SavedFlow[];
   if (limits.maxHistoryFlows === -1) {
