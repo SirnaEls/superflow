@@ -2,11 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { supabaseServer } from '@/lib/supabase-server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-11-17.clover',
-});
+// Initialize Stripe - will be validated at runtime in the POST handler
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET || '';
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+// Create Stripe instance only if key is available (for build time)
+const stripe = stripeSecretKey
+  ? new Stripe(stripeSecretKey, {
+      apiVersion: '2025-11-17.clover',
+    })
+  : null as any; // Will fail at runtime if not set
 
 /**
  * Map Stripe price ID to plan type
@@ -120,6 +125,15 @@ async function upsertSubscription(
 }
 
 export async function POST(request: NextRequest) {
+  // Validate environment variables at runtime
+  if (!stripeSecretKey || !webhookSecret) {
+    console.error('Missing Stripe environment variables');
+    return NextResponse.json(
+      { error: 'Stripe configuration missing' },
+      { status: 500 }
+    );
+  }
+
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
 

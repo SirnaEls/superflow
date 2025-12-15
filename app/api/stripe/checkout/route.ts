@@ -1,11 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2025-11-17.clover',
-});
+// Initialize Stripe - will be validated at runtime
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY || '';
+const stripe = stripeSecretKey
+  ? new Stripe(stripeSecretKey, {
+      apiVersion: '2025-11-17.clover',
+    })
+  : null as any; // Will fail at runtime if not set
 
 export async function POST(request: NextRequest) {
+  // Validate environment variables at runtime
+  if (!stripeSecretKey) {
+    return NextResponse.json(
+      { error: 'Stripe configuration missing' },
+      { status: 500 }
+    );
+  }
+
   try {
     const body = await request.json();
     const { priceId, successUrl, cancelUrl, customerEmail } = body;
