@@ -8,7 +8,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { priceId, successUrl, cancelUrl } = body;
+    const { priceId, successUrl, cancelUrl, customerEmail } = body;
 
     if (!priceId) {
       return NextResponse.json(
@@ -27,10 +27,11 @@ export async function POST(request: NextRequest) {
           quantity: 1,
         },
       ],
+      customer_email: customerEmail || undefined, // Link subscription to user email
       success_url: successUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: cancelUrl || `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3002'}/cancel`,
       metadata: {
-        // Add any metadata you need
+        user_email: customerEmail || '',
       },
     });
 

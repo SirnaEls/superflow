@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect } from 'react';
 import { Feature, UploadedImage, InputMode } from '@/types';
 import { generateFlowsFromAPI } from '@/lib/utils';
 import { saveFlow } from '@/lib/storage';
+import { canGenerate, incrementGenerationCount, getRemainingGenerations } from '@/lib/usage';
+import { getUserPlan } from '@/lib/plans';
 
 interface UseFlowGeneratorReturn {
   features: Feature[];
@@ -34,12 +36,25 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
       setError(null);
 
       try {
+        // Check if user can generate more flows
+        const plan = getUserPlan();
+        const canGenerateResult = canGenerate(plan);
+        
+        if (!canGenerateResult.allowed) {
+          setError(canGenerateResult.reason || 'Generation limit reached');
+          setIsGenerating(false);
+          return;
+        }
+
         const generatedFeatures = await generateFlowsFromAPI(
           textInput,
           images,
           inputMode
         );
         setFeatures(generatedFeatures);
+
+        // Increment generation count
+        incrementGenerationCount();
 
         // Auto-save the flow
         if (generatedFeatures.length > 0) {

@@ -1,12 +1,17 @@
 -- Create next_auth schema
 CREATE SCHEMA IF NOT EXISTS next_auth;
 
--- Enable UUID extension
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+-- Enable UUID extension (if not already enabled)
+DO $$
+BEGIN
+  IF NOT EXISTS (SELECT 1 FROM pg_extension WHERE extname = 'uuid-ossp') THEN
+    CREATE EXTENSION "uuid-ossp";
+  END IF;
+END $$;
 
 -- Users table
 CREATE TABLE IF NOT EXISTS next_auth.users (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   name TEXT,
   email TEXT UNIQUE,
   "emailVerified" TIMESTAMPTZ,
@@ -16,7 +21,7 @@ CREATE TABLE IF NOT EXISTS next_auth.users (
 
 -- Accounts table
 CREATE TABLE IF NOT EXISTS next_auth.accounts (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "userId" UUID NOT NULL REFERENCES next_auth.users(id) ON DELETE CASCADE,
   type TEXT NOT NULL,
   provider TEXT NOT NULL,
@@ -33,7 +38,7 @@ CREATE TABLE IF NOT EXISTS next_auth.accounts (
 
 -- Sessions table
 CREATE TABLE IF NOT EXISTS next_auth.sessions (
-  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   "userId" UUID NOT NULL REFERENCES next_auth.users(id) ON DELETE CASCADE,
   expires TIMESTAMPTZ NOT NULL,
   "sessionToken" TEXT UNIQUE NOT NULL,

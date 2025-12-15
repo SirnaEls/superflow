@@ -1,4 +1,5 @@
 import { Feature } from '@/types';
+import { getPlanLimits, getUserPlan } from './plans';
 
 export interface SavedFlow {
   id: string;
@@ -21,8 +22,20 @@ export function saveFlow(features: Feature[], name?: string): SavedFlow {
 
   const existing = getFlows();
   existing.unshift(flow);
-  // Keep only last 50 flows
-  const limited = existing.slice(0, 50);
+  
+  // Limit flows based on user's plan
+  const plan = getUserPlan();
+  const limits = getPlanLimits(plan);
+  
+  let limited: SavedFlow[];
+  if (limits.maxHistoryFlows === -1) {
+    // Unlimited - keep all flows
+    limited = existing;
+  } else {
+    // Limited - keep only the allowed number
+    limited = existing.slice(0, limits.maxHistoryFlows);
+  }
+  
   localStorage.setItem(STORAGE_KEY, JSON.stringify(limited));
   
   return flow;

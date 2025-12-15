@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { CreditCard, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { createCheckoutSession } from '@/lib/stripe';
+import { useAuth } from '@/hooks/useAuth';
 
 interface CheckoutButtonProps {
   priceId: string;
@@ -16,12 +17,13 @@ export const CheckoutButton: React.FC<CheckoutButtonProps> = ({
   children,
   className,
 }) => {
+  const { user } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const handleCheckout = async () => {
     try {
       setLoading(true);
-      const { url } = await createCheckoutSession(priceId);
+      const { url } = await createCheckoutSession(priceId, user?.email);
       
       if (url) {
         window.location.href = url;

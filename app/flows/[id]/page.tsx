@@ -58,7 +58,7 @@ export default function FlowDetailPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0A0A0F] text-white flex items-center justify-center">
-        <div className="text-slate-400">Chargement...</div>
+        <div className="text-slate-400">Loading...</div>
       </div>
     );
   }

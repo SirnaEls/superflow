@@ -40,7 +40,7 @@ export const FlowViewer: React.FC<FlowViewerProps> = ({
         />
       ) : (
         <div className="w-full h-full flex items-center justify-center">
-          <p className="text-slate-400 text-sm">Sélectionnez une feature pour voir le flow</p>
+          <p className="text-slate-400 text-sm">Select a feature to view the flow</p>
         </div>
       )}
     </div>

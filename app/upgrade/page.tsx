@@ -33,14 +33,15 @@ export default function UpgradePage() {
   }, [user, loading, router]);
 
   // Get price IDs from environment variables (available client-side with NEXT_PUBLIC_ prefix)
-  const starterPriceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || '';
-  const proPriceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_2 || process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || '';
+  // Support both naming conventions for backward compatibility
+  const starterPriceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_STARTER || process.env.NEXT_PUBLIC_STRIPE_PRICE_ID || '';
+  const proPriceId = process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO || process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_2 || '';
 
   // Show loading state while checking authentication
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0A0A0F] flex items-center justify-center">
-        <div className="text-slate-400">Chargement...</div>
+        <div className="text-slate-400">Loading...</div>
       </div>
     );
   }
@@ -55,11 +56,12 @@ export default function UpgradePage() {
       id: 'free',
       name: 'Free',
       description: 'Perfect for getting started',
-      price: '$0',
+      price: '€0',
       features: [
-        '5 user flows',
-        'Basic AI processing',
-        'Standard support',
+        '5 generations per month',
+        '10 flows in history',
+        'Edit nodes',
+        'Whiteboard zoom & pan',
       ],
       icon: <Zap className="w-6 h-6" />,
       cta: 'Current Plan',
@@ -68,13 +70,15 @@ export default function UpgradePage() {
       id: 'starter',
       name: 'Starter',
       description: 'For individuals and small teams',
-      price: '$9',
+      price: '€4.99',
       priceId: starterPriceId,
       features: [
-        '50 user flows',
-        'Priority AI processing',
+        '50 generations per month',
+        '100 flows in history',
+        'Edit nodes',
+        'Whiteboard zoom & pan',
+        'Export PNG/SVG',
         'Email support',
-        'Export to PNG',
       ],
       icon: <Sparkles className="w-6 h-6" />,
       popular: true,
@@ -85,15 +89,16 @@ export default function UpgradePage() {
       id: 'pro',
       name: 'Pro',
       description: 'For power users and agencies',
-      price: '$29',
+      price: '€9.99',
       priceId: proPriceId,
       features: [
-        'Unlimited user flows',
-        'Priority AI processing',
-        'Priority support',
+        'Unlimited generations',
+        'Unlimited history',
+        'Edit nodes',
+        'Whiteboard zoom & pan',
+        'Export PNG/SVG',
         'Export to Figma',
-        'Advanced customization',
-        'API access',
+        'Priority support',
       ],
       icon: <Crown className="w-6 h-6" />,
       cta: 'Upgrade to Pro',

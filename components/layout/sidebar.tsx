@@ -8,7 +8,6 @@ import { signOut } from '@/lib/auth';
 import { useAuth } from '@/hooks/useAuth';
 import { 
   Zap, 
-  History, 
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -20,6 +19,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { getFlows, SavedFlow } from '@/lib/storage';
+import { usePlan } from '@/hooks/use-plan';
 
 interface NavItem {
   label: string;
@@ -29,14 +29,9 @@ interface NavItem {
 
 const mainNavItems: NavItem[] = [
   {
-    label: 'Créer un User Flow',
+    label: 'Create User Flow',
     href: '/',
-    icon: <Zap className="w-5 h-5" />,
-  },
-  {
-    label: 'Historique',
-    href: '/history',
-    icon: <History className="w-5 h-5" />,
+    icon: <Zap className="w-5 h-5 text-[#F0EEE9]" />,
   },
 ];
 
@@ -81,26 +76,26 @@ export const Sidebar: React.FC = () => {
       isMounted && isCollapsed ? 'w-16' : 'w-64'
     )}>
       {/* Logo */}
-      <div className="p-6 border-b border-slate-800/50 flex items-center justify-center">
+      <Link href="/" className="p-6 border-b border-slate-800/50 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer">
         <Image 
-          src="/logo.png" 
+          src={isCollapsed ? "/logo-only.png" : "/logo.png"} 
           alt="Logo" 
           width={120} 
           height={120} 
           className="object-contain h-9 w-auto"
         />
-      </div>
+      </Link>
 
       {/* Toggle Button */}
       <button
         onClick={toggleCollapse}
-        className="absolute top-4 right-0 translate-x-1/2 w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-400 hover:text-white hover:bg-slate-700 transition-colors z-50"
+        className="absolute top-4 right-0 translate-x-1/2 w-6 h-6 rounded-full bg-slate-800 border border-slate-700 flex items-center justify-center text-[#F0EEE9] hover:bg-slate-700 transition-colors z-50"
         aria-label={isCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}
       >
         {isCollapsed ? (
-          <ChevronRight className="w-3 h-3" />
+          <ChevronRight className="w-3 h-3 text-[#F0EEE9]" />
         ) : (
-          <ChevronLeft className="w-3 h-3" />
+          <ChevronLeft className="w-3 h-3 text-[#F0EEE9]" />
         )}
       </button>
 
@@ -123,7 +118,7 @@ export const Sidebar: React.FC = () => {
                 title={isMounted && isCollapsed ? item.label : undefined}
               >
                 <span className={cn(
-                  isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-300',
+                  'text-[#F0EEE9]',
                   'flex-shrink-0'
                 )}>
                   {item.icon}
@@ -141,10 +136,10 @@ export const Sidebar: React.FC = () => {
           <div className="mt-8">
             <div className="px-3 mb-2">
               <h3 className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
-                Récents
+                Recent
               </h3>
             </div>
-            <div className="space-y-1">
+            <div className="space-y-0.5">
               {recentFlows.map((flow) => {
                 const isActive = currentPath === `/flows/${flow.id}`;
                 return (
@@ -152,13 +147,12 @@ export const Sidebar: React.FC = () => {
                     key={flow.id}
                     href={`/flows/${flow.id}`}
                     className={cn(
-                      'flex items-center gap-2 px-3 py-2 rounded-lg transition-colors group',
+                      'flex items-center gap-2 px-3 py-1.5 rounded-lg transition-colors group',
                       isActive
                         ? 'bg-slate-800/50 text-white'
                         : 'text-slate-400 hover:text-white hover:bg-slate-800/30'
                     )}
                   >
-                    <History className="w-4 h-4 flex-shrink-0" />
                     <span className="text-sm truncate flex-1">{flow.name}</span>
                   </Link>
                 );
@@ -183,11 +177,13 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
   const [isOpen, setIsOpen] = useState(false);
 
   const displayUser = user || {
-    name: 'Invité',
+    name: 'Guest',
     email: '',
   };
 
-  const plan = 'Gratuit'; // TODO: Get from subscription status
+  // Get plan from usePlan hook
+  const { plan: userPlan } = usePlan();
+  const plan = userPlan === 'free' ? 'Free' : userPlan === 'starter' ? 'Starter' : 'Pro';
 
   const handleSignOut = async () => {
     try {
@@ -212,27 +208,27 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
             : 'text-slate-400 hover:text-white hover:bg-slate-800/30',
           isCollapsed && 'justify-center'
         )}
-        title={isCollapsed ? (displayUser.name || 'Invité') : undefined}
+        title={isCollapsed ? (displayUser.name || 'Guest') : undefined}
       >
         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-violet-500 to-indigo-600 flex items-center justify-center flex-shrink-0 overflow-hidden">
           {displayUser.avatar ? (
             <img src={displayUser.avatar} alt={displayUser.name || 'User'} className="w-full h-full object-cover" />
           ) : (
-            <User className="w-4 h-4 text-white" />
+            <User className="w-4 h-4 text-[#F0EEE9]" />
           )}
         </div>
         {!isCollapsed && (
           <>
             <div className="flex-1 min-w-0 text-left">
               <div className="text-sm font-medium text-white truncate">
-                {displayUser.name || 'Invité'}
+                {displayUser.name || 'Guest'}
               </div>
               <div className="text-xs text-slate-500 truncate">
                 {plan}
               </div>
             </div>
             <ChevronDown className={cn(
-              'w-4 h-4 text-slate-500 transition-transform flex-shrink-0',
+              'w-4 h-4 text-[#F0EEE9] transition-transform flex-shrink-0',
               isOpen && 'rotate-180'
             )} />
           </>
@@ -248,23 +244,15 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
               >
-                <Settings className="w-4 h-4" />
-                <span>Paramètres du compte</span>
-              </Link>
-              <Link
-                href="/account"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>Abonnement</span>
+                <Settings className="w-4 h-4 text-[#F0EEE9]" />
+                <span>Account Settings</span>
               </Link>
               <button
                 onClick={handleSignOut}
                 className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Déconnexion</span>
+                <LogOut className="w-4 h-4 text-[#F0EEE9]" />
+                <span>Sign Out</span>
               </button>
             </>
           ) : (
@@ -273,8 +261,8 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
             >
-              <LogIn className="w-4 h-4" />
-              <span>Se connecter</span>
+              <LogIn className="w-4 h-4 text-[#F0EEE9]" />
+              <span>Sign In</span>
             </Link>
           )}
         </div>
@@ -284,27 +272,19 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
           {user ? (
             <>
               <Link
-                href="/upgrade"
-                onClick={() => setIsOpen(false)}
-                className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
-              >
-                <CreditCard className="w-4 h-4" />
-                <span>Upgrade</span>
-              </Link>
-              <Link
                 href="/account"
                 onClick={() => setIsOpen(false)}
                 className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
               >
-                <Settings className="w-4 h-4" />
-                <span>Paramètres</span>
+                <Settings className="w-4 h-4 text-[#F0EEE9]" />
+                <span>Settings</span>
               </Link>
               <button
                 onClick={handleSignOut}
                 className="flex items-center gap-3 w-full px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
               >
-                <LogOut className="w-4 h-4" />
-                <span>Déconnexion</span>
+                <LogOut className="w-4 h-4 text-[#F0EEE9]" />
+                <span>Sign Out</span>
               </button>
             </>
           ) : (
@@ -313,8 +293,8 @@ const AccountSection: React.FC<{ isCollapsed: boolean }> = ({ isCollapsed }) => 
               onClick={() => setIsOpen(false)}
               className="flex items-center gap-3 px-4 py-2.5 text-sm text-slate-300 hover:bg-slate-800 hover:text-white transition-colors"
             >
-              <LogIn className="w-4 h-4" />
-              <span>Se connecter</span>
+              <LogIn className="w-4 h-4 text-[#F0EEE9]" />
+              <span>Sign In</span>
             </Link>
           )}
         </div>

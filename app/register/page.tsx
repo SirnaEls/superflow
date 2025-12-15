@@ -108,8 +108,8 @@ export default function RegisterPage() {
 
   return (
     <SignUpPage
-      title={<span className="font-light text-foreground tracking-tighter">Créer un compte</span>}
-      description="Rejoignez-nous et commencez votre voyage aujourd'hui"
+      title={<span className="font-light text-foreground tracking-tighter">Create account</span>}
+      description="Join us and start your journey today"
       heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
       testimonials={sampleTestimonials}
       onSignUp={handleEmailPasswordRegister}

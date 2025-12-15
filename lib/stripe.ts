@@ -4,7 +4,7 @@ export const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!
 );
 
-export async function createCheckoutSession(priceId: string) {
+export async function createCheckoutSession(priceId: string, customerEmail?: string) {
   const response = await fetch('/api/stripe/checkout', {
     method: 'POST',
     headers: {
@@ -12,6 +12,7 @@ export async function createCheckoutSession(priceId: string) {
     },
     body: JSON.stringify({
       priceId,
+      customerEmail,
       successUrl: `${window.location.origin}/success?session_id={CHECKOUT_SESSION_ID}`,
       cancelUrl: `${window.location.origin}/cancel`,
     }),
