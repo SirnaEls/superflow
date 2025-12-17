@@ -117,8 +117,8 @@ export default function LoginPage() {
 
   return (
     <SignInPage
-      title={<span className="font-light text-foreground tracking-tighter">Bienvenue sur FlowForge</span>}
-      description="Connectez-vous pour continuer votre voyage avec nous"
+      title={<span className="font-light text-foreground tracking-tighter">Welcome to SupaFlow</span>}
+      description="Sign in to continue your journey with us"
       heroImageSrc="https://images.unsplash.com/photo-1642615835477-d303d7dc9ee9?w=2160&q=80"
       testimonials={sampleTestimonials}
       onSignIn={handleEmailPasswordLogin}

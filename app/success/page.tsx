@@ -46,7 +46,7 @@ function SuccessContent() {
                 </p>
               )}
               <Link href="/">
-                <Button className="w-full">Return to FlowForge</Button>
+                <Button className="w-full">Return to SupaFlow</Button>
               </Link>
             </>
           ) : null}
