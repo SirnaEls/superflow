@@ -78,7 +78,7 @@ export const Sidebar: React.FC = () => {
       {/* Logo */}
       <Link href="/" className="p-6 border-b border-slate-800/50 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer">
         <Image 
-          src={isCollapsed ? "/logo-only.png" : "/logo.png"} 
+          src={isCollapsed ? "/logo-only.svg" : "/logo.svg"} 
           alt="Logo" 
           width={120} 
           height={120} 
