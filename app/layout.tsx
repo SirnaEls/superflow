@@ -4,6 +4,7 @@ import './globals.css';
 import { Sidebar } from '@/components/layout/sidebar';
 import { SessionProvider } from '@/components/providers/session-provider';
 import { ConditionalLayout } from '@/components/layout/conditional-layout';
+import { GoogleAnalytics } from '@/components/analytics/google-analytics';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -20,6 +21,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
+        <GoogleAnalytics />
         <SessionProvider>
           <ConditionalLayout>
             {children}
