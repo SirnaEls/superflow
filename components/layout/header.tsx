@@ -22,7 +22,7 @@ export const Header: React.FC = () => {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Link href="/upgrade">
-              <Button className="bg-[#F0EEE9] hover:bg-[#E8E6E1] text-[#212121] font-medium shadow-lg shadow-black/20 focus:ring-[#F0EEE9]">
+              <Button className="!bg-[#F0EEE9] hover:!bg-[#E8E6E1] !text-[#212121] font-medium shadow-lg shadow-black/20 focus:ring-[#F0EEE9]">
                 Upgrade
               </Button>
             </Link>
