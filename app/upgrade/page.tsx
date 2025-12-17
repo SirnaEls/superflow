@@ -97,7 +97,6 @@ export default function UpgradePage() {
         'Edit nodes',
         'Whiteboard zoom & pan',
         'Export PNG/SVG',
-        'Export to Figma',
         'Priority support',
       ],
       icon: <Crown className="w-6 h-6" />,

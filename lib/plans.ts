@@ -8,7 +8,6 @@ export interface PlanLimits {
   generationsPerMonth: number; // -1 for unlimited
   maxHistoryFlows: number; // -1 for unlimited
   exportEnabled: boolean;
-  exportFigmaEnabled: boolean;
 }
 
 export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
@@ -16,19 +15,16 @@ export const PLAN_LIMITS: Record<PlanType, PlanLimits> = {
     generationsPerMonth: 5,
     maxHistoryFlows: 10,
     exportEnabled: false,
-    exportFigmaEnabled: false,
   },
   starter: {
     generationsPerMonth: 50,
     maxHistoryFlows: 100,
     exportEnabled: true,
-    exportFigmaEnabled: false,
   },
   pro: {
     generationsPerMonth: -1, // unlimited
     maxHistoryFlows: -1, // unlimited
     exportEnabled: true,
-    exportFigmaEnabled: true,
   },
 };
 

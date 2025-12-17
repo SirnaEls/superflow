@@ -73,7 +73,6 @@ export default function AccountPage() {
           'Edit nodes',
           'Whiteboard zoom & pan',
           'Export PNG/SVG',
-          'Export to Figma',
           'Priority support',
         ];
       default:
