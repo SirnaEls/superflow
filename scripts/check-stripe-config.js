@@ -57,9 +57,13 @@ const requiredVars = {
     pattern: /^whsec_/,
     description: 'Secret du webhook Stripe (commence par whsec_)'
   },
-  'NEXT_PUBLIC_STRIPE_PRICE_ID': {
+  'NEXT_PUBLIC_STRIPE_PRICE_ID_STARTER': {
     pattern: /^price_/,
-    description: 'ID du prix Stripe (commence par price_)'
+    description: 'ID du prix Starter Stripe (commence par price_)'
+  },
+  'NEXT_PUBLIC_STRIPE_PRICE_ID_PRO': {
+    pattern: /^price_/,
+    description: 'ID du prix Pro Stripe (commence par price_)'
   },
   'NEXT_PUBLIC_APP_URL': {
     pattern: /^https?:\/\//,
