@@ -282,24 +282,24 @@ export const FlowCanvas: React.FC<FlowCanvasProps> = ({
         }}
       >
         <div className="flex items-center gap-8 p-10">
-          {nodes.map((node, index) => (
-            <React.Fragment key={node.id}>
+        {nodes.map((node, index) => (
+          <React.Fragment key={node.id}>
               <div data-flow-node>
-                <FlowNode
-                  node={node}
-                  isSelected={selectedNodeId === node.id}
-                  onSelect={onSelectNode}
-                  featureId={featureId}
-                  onUpdateNode={onUpdateNode}
-                />
+            <FlowNode
+              node={node}
+              isSelected={selectedNodeId === node.id}
+              onSelect={onSelectNode}
+              featureId={featureId}
+              onUpdateNode={onUpdateNode}
+            />
               </div>
-              {index < nodes.length - 1 && (
+            {index < nodes.length - 1 && (
                 <div data-connection-arrow>
-                  <ConnectionArrow label={node.connectionLabel} />
+              <ConnectionArrow label={node.connectionLabel} />
                 </div>
-              )}
-            </React.Fragment>
-          ))}
+            )}
+          </React.Fragment>
+        ))}
         </div>
       </div>
     </div>

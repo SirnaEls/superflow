@@ -35,7 +35,7 @@ export const FeatureList: React.FC<FeatureListProps> = ({
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-lg font-semibold flex items-center gap-2 text-white">
             Features Detected
-            <Badge variant="primary">{features.length}</Badge>
+            <Badge variant="default" className="!bg-[#E75B13]/20 !text-[#E75B13] border border-[#E75B13]/30">{features.length}</Badge>
           </h2>
           <button
             type="button"

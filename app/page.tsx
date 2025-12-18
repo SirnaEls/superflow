@@ -5,7 +5,6 @@ import { InputMode, UploadedImage } from '@/types';
 import { useFlowGenerator } from '@/hooks';
 import { Header } from '@/components/layout';
 import { FloatingFeatures, FlowViewer, ChatBar } from '@/components/features';
-import { FloatingLegend } from '@/components/flow';
 
 // ============================================
 // Main Page Component
@@ -36,7 +35,7 @@ export default function FlowForgePage() {
       <div className="fixed inset-0 bg-gradient-to-br from-violet-950/20 via-transparent to-indigo-950/20 pointer-events-none" />
 
       {/* Header */}
-      <Header />
+      <Header hasActiveFlow={features.length > 0} />
 
       {/* Main Content - Whiteboard full screen */}
       <div className="flex-1 overflow-hidden pb-32 relative">
@@ -55,9 +54,6 @@ export default function FlowForgePage() {
           onDeleteFeature={deleteFeature}
           onClearAll={clearFeatures}
         />
-
-        {/* Floating Legend - Bottom Right */}
-        <FloatingLegend />
       </div>
 
       {/* Chat Bar - Fixed at bottom */}

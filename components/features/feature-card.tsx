@@ -60,7 +60,7 @@ export const FeatureCard: React.FC<FeatureCardProps> = ({
           {feature.description}
         </p>
         <div className="flex items-center gap-2 flex-wrap">
-          <Badge variant="default" className="text-xs">
+          <Badge variant="default" className="text-xs !bg-[#E75B13]/20 !text-[#E75B13] border border-[#E75B13]/30">
             {feature.flow?.nodes?.length || 0} steps
           </Badge>
           {feature.priority && (

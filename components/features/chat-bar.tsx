@@ -189,13 +189,13 @@ export function ChatBar({ onGenerate, isGenerating, error }: ChatBarProps) {
           <button
             onClick={handleGenerate}
             disabled={!canGenerate || isGenerating}
-            className="w-10 h-10 rounded-full bg-[#424242] hover:bg-[#4a4a4a] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors flex-shrink-0"
+            className="w-10 h-10 rounded-full bg-[#E75B13] hover:bg-[#D04F0F] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center transition-colors flex-shrink-0"
             title="Send"
           >
             {isGenerating ? (
               <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
             ) : (
-              <ArrowUp className="w-5 h-5 text-[#F0EEE9]" />
+              <ArrowUp className="w-5 h-5 text-white" />
             )}
           </button>
         </div>
