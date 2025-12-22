@@ -35,11 +35,24 @@ export default function LoginPage() {
   const { user, loading: authLoading } = useAuth();
   const router = useRouter();
 
-  // Get callback URL from query params
+  // Get callback URL from query params and check for errors
   useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       setCallbackUrl(params.get('callbackUrl') || '/');
+      
+      // Vérifier s'il y a une erreur dans l'URL
+      const errorParam = params.get('error');
+      if (errorParam) {
+        const errorMessages: Record<string, string> = {
+          'session_error': 'Erreur lors de la création de la session. Veuillez réessayer.',
+          'no_token': 'Token d\'accès introuvable. Veuillez réessayer de vous connecter.',
+          'callback_error': 'Erreur lors du traitement de la connexion. Veuillez réessayer.',
+          'session_not_created': 'La session n\'a pas pu être créée. Veuillez réessayer.',
+          'access_denied': 'Accès refusé. Veuillez réessayer.',
+        };
+        setError(errorMessages[errorParam] || 'Une erreur est survenue lors de la connexion');
+      }
     }
   }, []);
 
@@ -67,11 +80,21 @@ export default function LoginPage() {
       });
 
       if (signInError) {
-        setError('Email ou mot de passe incorrect');
+        setError(signInError.message || 'Email ou mot de passe incorrect');
         setLoading(null);
-      } else {
-        // La redirection se fera automatiquement via le useEffect ci-dessus
+        return;
+      }
+
+      // Attendre un peu pour s'assurer que la session est bien créée
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Vérifier la session avant de rediriger
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
         router.push(callbackUrl);
+      } else {
+        setError('Erreur lors de la connexion. Veuillez réessayer.');
+        setLoading(null);
       }
     } catch (error) {
       console.error('Login error:', error);

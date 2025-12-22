@@ -71,12 +71,30 @@ export default function RegisterPage() {
         return;
       }
 
-      // Si l'inscription réussit, l'utilisateur est automatiquement connecté
-      // Rediriger vers la page d'accueil
-      if (data.user) {
+      // Vérifier si l'utilisateur a été créé
+      if (!data.user) {
+        setError('Erreur lors de la création du compte');
+        setLoading(null);
+        return;
+      }
+
+      // Vérifier si l'email nécessite une confirmation
+      // Si data.session est null, cela signifie que l'email doit être confirmé
+      if (!data.session) {
+        setError('Veuillez vérifier votre email pour confirmer votre compte avant de vous connecter');
+        setLoading(null);
+        return;
+      }
+
+      // Si l'inscription réussit et que l'utilisateur est automatiquement connecté
+      // Attendre un peu pour s'assurer que la session est bien créée
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
+      // Vérifier la session avant de rediriger
+      const { data: { session } } = await supabaseClient.auth.getSession();
+      if (session) {
         router.push('/');
       } else {
-        // Si l'email nécessite une confirmation, informer l'utilisateur
         setError('Veuillez vérifier votre email pour confirmer votre compte');
         setLoading(null);
       }

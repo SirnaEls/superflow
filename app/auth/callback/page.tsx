@@ -25,12 +25,15 @@ function AuthCallbackContent() {
         const hash = window.location.hash.substring(1); // Enlever le '#'
         const hashParams = new URLSearchParams(hash);
         
-        const accessToken = hashParams.get('access_token');
-        const refreshToken = hashParams.get('refresh_token');
-        const errorParam = hashParams.get('error');
-        const errorDescription = hashParams.get('error_description');
+        // Vérifier aussi les query params (certaines configurations Supabase utilisent query params)
+        const queryParams = new URLSearchParams(window.location.search);
+        
+        const accessToken = hashParams.get('access_token') || queryParams.get('access_token');
+        const refreshToken = hashParams.get('refresh_token') || queryParams.get('refresh_token');
+        const errorParam = hashParams.get('error') || queryParams.get('error');
+        const errorDescription = hashParams.get('error_description') || queryParams.get('error_description');
 
-        // Vérifier s'il y a une erreur dans le hash
+        // Vérifier s'il y a une erreur
         if (errorParam) {
           setError(errorDescription || errorParam || 'Erreur lors de l\'authentification');
           setStatus('error');
@@ -40,7 +43,7 @@ function AuthCallbackContent() {
           return;
         }
 
-        // Si on a un access_token dans le hash, créer une session Supabase
+        // Si on a un access_token, créer une session Supabase
         if (accessToken && refreshToken) {
           const { data, error: setSessionError } = await supabaseClient.auth.setSession({
             access_token: accessToken,
@@ -57,31 +60,49 @@ function AuthCallbackContent() {
             return;
           }
 
-          // Session créée avec succès, nettoyer le hash et rediriger
-          window.history.replaceState(null, '', window.location.pathname + window.location.search);
+          // Session créée avec succès, nettoyer l'URL et attendre un peu pour que la session soit persistée
+          window.history.replaceState(null, '', window.location.pathname);
           setStatus('success');
           
-          // Rediriger vers l'app
+          // Attendre un peu pour s'assurer que la session est bien persistée
+          await new Promise(resolve => setTimeout(resolve, 500));
+          
+          // Vérifier que la session est bien créée avant de rediriger
+          const { data: { session: verifySession } } = await supabaseClient.auth.getSession();
+          if (verifySession) {
+            router.push(callbackUrl);
+          } else {
+            setError('La session n\'a pas pu être créée');
+            setStatus('error');
+            setTimeout(() => {
+              router.push('/login?error=session_not_created');
+            }, 2000);
+          }
+          return;
+        }
+
+        // Si pas de token dans l'URL, vérifier si on a une session Supabase existante
+        // (peut arriver si l'utilisateur revient sur cette page alors qu'il est déjà connecté)
+        const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
+        
+        if (session) {
+          // Session existante trouvée, rediriger
+          window.history.replaceState(null, '', window.location.pathname);
+          setStatus('success');
           router.push(callbackUrl);
           return;
         }
 
-        // Si pas de token dans le hash, vérifier si on a une session Supabase existante
-        const { data: { session }, error: sessionError } = await supabaseClient.auth.getSession();
-        
-        if (sessionError || !session) {
-          setError('Token d\'accès introuvable dans l\'URL');
-          setStatus('error');
-          setTimeout(() => {
-            router.push('/login?error=no_token');
-          }, 2000);
-          return;
+        // Pas de token et pas de session - erreur
+        if (sessionError) {
+          console.error('Session error:', sessionError);
         }
-
-        // Session existante trouvée, rediriger
-        window.history.replaceState(null, '', window.location.pathname + window.location.search);
-        setStatus('success');
-        router.push(callbackUrl);
+        
+        setError('Token d\'accès introuvable dans l\'URL');
+        setStatus('error');
+        setTimeout(() => {
+          router.push('/login?error=no_token');
+        }, 2000);
       } catch (err: any) {
         console.error('Error in auth callback:', err);
         setError(err.message || 'Erreur lors du traitement du callback');

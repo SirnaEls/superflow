@@ -28,29 +28,54 @@ export function useAuth(): UseAuthReturn {
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+
     // Récupérer la session initiale
-    supabaseClient.auth.getSession().then(({ data: { session }, error }) => {
-      if (error) {
-        setError(error);
+    const initializeAuth = async () => {
+      try {
+        const { data: { session }, error } = await supabaseClient.auth.getSession();
+        
+        if (!mounted) return;
+
+        if (error) {
+          console.error('Error getting session:', error);
+          setError(error);
+          setLoading(false);
+          return;
+        }
+
+        setSession(session);
+        setUser(session?.user ? mapSupabaseUserToAuthUser(session.user) : null);
         setLoading(false);
-        return;
+      } catch (err) {
+        if (!mounted) return;
+        console.error('Error initializing auth:', err);
+        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
+
+    // Écouter les changements d'authentification
+    const {
+      data: { subscription },
+    } = supabaseClient.auth.onAuthStateChange(async (event, session) => {
+      if (!mounted) return;
+
+      // Log pour le débogage en production
+      if (process.env.NODE_ENV === 'development') {
+        console.log('Auth state changed:', event, session?.user?.email);
       }
 
       setSession(session);
       setUser(session?.user ? mapSupabaseUserToAuthUser(session.user) : null);
       setLoading(false);
-    });
-
-    // Écouter les changements d'authentification
-    const {
-      data: { subscription },
-    } = supabaseClient.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-      setUser(session?.user ? mapSupabaseUserToAuthUser(session.user) : null);
-      setLoading(false);
+      setError(null);
     });
 
     return () => {
+      mounted = false;
       subscription.unsubscribe();
     };
   }, []);

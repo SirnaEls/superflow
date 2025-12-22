@@ -22,10 +22,19 @@ export interface AuthUser {
  * Connexion avec Google OAuth
  */
 export async function signInWithGoogle(redirectTo?: string) {
+  // S'assurer qu'on a une URL valide
+  const origin = typeof window !== 'undefined' ? window.location.origin : '';
+  const defaultRedirectTo = `${origin}/auth/callback`;
+  const finalRedirectTo = redirectTo || defaultRedirectTo;
+
   const { data, error } = await supabaseClient.auth.signInWithOAuth({
     provider: 'google',
     options: {
-      redirectTo: redirectTo || `${window.location.origin}/auth/callback`,
+      redirectTo: finalRedirectTo,
+      queryParams: {
+        access_type: 'offline',
+        prompt: 'consent',
+      },
     },
   });
 
