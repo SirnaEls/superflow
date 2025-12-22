@@ -76,7 +76,16 @@ export const Sidebar: React.FC = () => {
       isMounted && isCollapsed ? 'w-16' : 'w-64'
     )}>
       {/* Logo */}
-      <Link href="/" className="p-6 border-b border-slate-800/50 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer">
+      <Link 
+        href="/" 
+        onClick={() => {
+          // Dispatch event to reset features when clicking logo
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('reset-features'));
+          }
+        }}
+        className="p-6 border-b border-slate-800/50 flex items-center justify-center hover:opacity-80 transition-opacity cursor-pointer"
+      >
         <Image 
           src={isCollapsed ? "/logo-only.svg" : "/logo.svg"} 
           alt="Logo" 

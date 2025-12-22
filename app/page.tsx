@@ -1,6 +1,7 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import { InputMode, UploadedImage } from '@/types';
 import { useFlowGenerator } from '@/hooks';
 import { Header } from '@/components/layout';
@@ -11,6 +12,7 @@ import { FloatingFeatures, FlowViewer, ChatBar } from '@/components/features';
 // ============================================
 
 export default function FlowForgePage() {
+  const pathname = usePathname();
 
   const {
     features,
@@ -18,12 +20,26 @@ export default function FlowForgePage() {
     isGenerating,
     error,
     generateFlows,
+    loadExample,
     setActiveFeatureId,
     deleteFeature,
     clearFeatures,
     updateNode,
     activeFeature,
   } = useFlowGenerator();
+
+  // Listen for reset-features event from sidebar logo click
+  useEffect(() => {
+    const handleResetFeatures = () => {
+      clearFeatures();
+    };
+
+    window.addEventListener('reset-features', handleResetFeatures);
+    return () => {
+      window.removeEventListener('reset-features', handleResetFeatures);
+    };
+  }, [clearFeatures]);
+
 
   const handleGenerate = async (text: string, images: UploadedImage[], mode: InputMode) => {
     await generateFlows(text, images, mode);
@@ -44,6 +60,8 @@ export default function FlowForgePage() {
           activeFeature={activeFeature} 
           activeFeatureId={activeFeatureId}
           onUpdateNode={updateNode}
+          onLoadExample={loadExample}
+          hasFeatures={features.length > 0}
         />
 
         {/* Floating Features - Top Right */}

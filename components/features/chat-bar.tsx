@@ -15,8 +15,14 @@ interface ChatBarProps {
 export function ChatBar({ onGenerate, isGenerating, error }: ChatBarProps) {
   const [textInput, setTextInput] = useState('');
   const [sidebarWidth, setSidebarWidth] = useState(256);
+  const [isMounted, setIsMounted] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { plan, remainingGenerations, canGenerate: canGenerateFlow, limits } = usePlan();
+  
+  // Prevent hydration mismatch by only rendering after mount
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
   
   const {
     images,
@@ -94,8 +100,8 @@ export function ChatBar({ onGenerate, isGenerating, error }: ChatBarProps) {
       style={{ left: `${sidebarWidth}px` }}
     >
       <div className="max-w-4xl mx-auto px-4">
-        {/* Usage Info */}
-        {limits.generationsPerMonth !== -1 && (
+        {/* Usage Info - Only render after mount to prevent hydration mismatch */}
+        {isMounted && limits.generationsPerMonth !== -1 && (
           <div className="mb-3 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-xs text-white/60">
             {remainingGenerations > 0 ? (
               <span>

@@ -37,7 +37,7 @@ export const Header: React.FC<HeaderProps> = ({ hasActiveFlow = false }) => {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Link href="/upgrade">
-              <Button className="!bg-[#E75B13] hover:!bg-[#D04F0F] !text-white font-medium shadow-lg shadow-black/20 focus:ring-[#E75B13] flex items-center gap-2">
+              <Button className="!bg-[#E75B13] hover:!bg-[#D04F0F] !text-white font-medium shadow-lg shadow-black/20 focus:ring-[#E75B13] flex items-center gap-2 border-0">
                 <Sparkles className="w-4 h-4" />
                 Upgrade Plan
               </Button>

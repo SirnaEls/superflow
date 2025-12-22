@@ -18,6 +18,7 @@ interface UseFlowGeneratorReturn {
     images: UploadedImage[],
     inputMode: InputMode
   ) => Promise<void>;
+  loadExample: (example: Feature) => void;
   setActiveFeatureId: (id: string | null) => void;
   deleteFeature: (id: string) => void;
   clearFeatures: () => void;
@@ -100,6 +101,17 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
     setError(null);
   }, []);
 
+  const loadExample = useCallback((example: Feature) => {
+    // Load example without incrementing generation count
+    setFeatures([example]);
+    setActiveFeatureId(example.id);
+    setError(null);
+    
+    // Auto-save the example flow
+    const flowName = example.name || `Example: ${example.name}`;
+    saveFlow([example], flowName);
+  }, []);
+
   const updateNode = useCallback(
     (featureId: string, nodeId: string, updates: { label?: string; details?: string[] }) => {
       setFeatures((prev) =>
@@ -134,6 +146,7 @@ export const useFlowGenerator = (): UseFlowGeneratorReturn => {
     isGenerating,
     error,
     generateFlows,
+    loadExample,
     setActiveFeatureId,
     deleteFeature,
     clearFeatures,
