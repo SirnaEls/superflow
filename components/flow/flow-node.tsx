@@ -37,7 +37,7 @@ const NodeShape: React.FC<NodeShapeProps> = ({
           onClick={onClick}
           className={cn(
             baseClasses,
-            'px-6 py-4 rounded-xl border-2 min-w-[160px] max-w-[200px] text-center hover:border-slate-500 transition-all'
+            'px-6 py-4 rounded-xl border-2 min-w-[160px] max-w-[400px] w-fit text-center hover:border-slate-500 transition-all'
           )}
           style={{ 
             backgroundColor: config.bgColor, 
@@ -52,20 +52,21 @@ const NodeShape: React.FC<NodeShapeProps> = ({
 
     case 'diamond':
       return (
-        <div onClick={onClick} className={cn(baseClasses, 'relative')}>
+        <div onClick={onClick} className={cn(baseClasses, 'relative flex items-center justify-center')}>
           <div
-            className="w-36 h-36 rotate-45 rounded-sm border-2 hover:border-slate-500 transition-all"
+            className="min-w-[144px] min-h-[144px] max-w-[300px] max-h-[300px] w-fit h-fit rotate-45 rounded-sm border-2 hover:border-slate-500 transition-all p-4"
             style={{
               backgroundColor: config.bgColor,
               borderColor: config.color,
-              borderWidth: '2px'
+              borderWidth: '2px',
+              aspectRatio: '1 / 1'
             }}
           />
           <div
-            className="absolute inset-0 flex items-center justify-center text-center px-4"
+            className="absolute inset-0 flex items-center justify-center text-center px-4 py-4"
             style={{ color: config.textColor }}
           >
-            <span className="text-sm font-medium leading-snug block -rotate-45">
+            <span className="text-sm font-medium leading-snug block -rotate-45 break-words max-w-full">
               {children}
             </span>
           </div>
@@ -78,7 +79,7 @@ const NodeShape: React.FC<NodeShapeProps> = ({
           onClick={onClick}
           className={cn(
             baseClasses,
-            'px-6 py-4 border-2 transform skew-x-[-15deg] min-w-[160px] max-w-[200px] rounded-sm hover:border-slate-500 transition-all'
+            'px-6 py-4 border-2 transform skew-x-[-15deg] min-w-[160px] max-w-[400px] w-fit rounded-sm hover:border-slate-500 transition-all'
           )}
           style={{ 
             backgroundColor: config.bgColor, 
@@ -87,7 +88,7 @@ const NodeShape: React.FC<NodeShapeProps> = ({
             borderWidth: '2px'
           }}
         >
-          <span className="block skew-x-[15deg] text-center">{children}</span>
+          <span className="block skew-x-[15deg] text-center break-words">{children}</span>
         </div>
       );
 
@@ -95,7 +96,7 @@ const NodeShape: React.FC<NodeShapeProps> = ({
       return (
         <div onClick={onClick} className={cn(baseClasses, 'relative')}>
           <div
-            className="w-32 h-24 rounded-xl border-2 relative overflow-hidden hover:border-slate-500 transition-all"
+            className="min-w-[128px] min-h-[96px] w-fit h-fit rounded-xl border-2 relative overflow-hidden hover:border-slate-500 transition-all py-2"
             style={{
               backgroundColor: config.bgColor,
               borderColor: config.color,
@@ -117,9 +118,9 @@ const NodeShape: React.FC<NodeShapeProps> = ({
                 opacity="0.25"
               />
             </svg>
-            <div className="flex items-center justify-center h-full pt-1 px-4">
+            <div className="flex items-center justify-center min-h-[calc(100%-24px)] pt-1 px-4 pb-1">
               <span
-                className="text-sm font-medium text-center leading-snug"
+                className="text-sm font-medium text-center leading-snug break-words"
                 style={{ color: config.textColor }}
               >
                 {children}
@@ -160,7 +161,7 @@ const NodeShape: React.FC<NodeShapeProps> = ({
           onClick={onClick}
           className={cn(
             baseClasses,
-            'px-6 py-4 rounded-xl border-2 min-w-[160px] max-w-[200px] text-center hover:border-slate-500 transition-all'
+            'px-6 py-4 rounded-xl border-2 min-w-[160px] max-w-[400px] w-fit text-center hover:border-slate-500 transition-all'
           )}
           style={{
             backgroundColor: config.bgColor,
@@ -226,7 +227,7 @@ export const FlowNode: React.FC<FlowNodeProps> = ({
     return (
       <div className="flex flex-col items-center flex-shrink-0 relative z-50">
         <div
-          className="px-6 py-4 rounded-xl border-2 min-w-[200px] max-w-[300px] bg-slate-900 border-indigo-500 shadow-xl"
+          className="px-6 py-4 rounded-xl border-2 min-w-[200px] max-w-[500px] w-fit bg-slate-900 border-indigo-500 shadow-xl"
           onClick={(e) => e.stopPropagation()}
         >
           <div className="flex flex-col gap-3">
@@ -290,19 +291,19 @@ export const FlowNode: React.FC<FlowNodeProps> = ({
         onClick={() => onSelect?.(node.id)}
       >
         <div 
-          className="flex flex-col items-center gap-1 relative"
+          className="flex flex-col items-center gap-1 relative w-full"
           onDoubleClick={handleDoubleClick}
         >
-          <span className="text-sm font-semibold break-words text-center leading-relaxed">
+          <span className="text-sm font-semibold break-words text-center leading-relaxed w-full px-1">
             {node.label}
           </span>
           {node.type === 'description' && node.details && node.details.length > 0 && (
             <div className="mt-2 pt-2 border-t border-current/20 w-full">
               <ul className="text-xs text-left space-y-1 px-2" style={{ color: config.textColor, opacity: 0.8 }}>
                 {node.details.map((detail, idx) => (
-                  <li key={idx} className="flex items-start">
-                    <span className="mr-2">•</span>
-                    <span>{detail}</span>
+                  <li key={idx} className="flex items-start break-words">
+                    <span className="mr-2 flex-shrink-0">•</span>
+                    <span className="break-words">{detail}</span>
                   </li>
                 ))}
               </ul>
